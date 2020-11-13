@@ -149,7 +149,32 @@ protein_df %>%
   filter(Ratio.H.M.Sig <= 0.05)
 
 # Exercise 10.4 (Find top 20 values) ==== 
+# Which proteins (i.e. Uniprot IDs) have the 20 highest  
+# log2 H/M and M/L ratios?
 
+# HM, positive only
+protein_df %>% 
+  arrange(-Ratio.H.M)
+
+
+# HM, either side of zero?
+# first, rearrange the data, then take the first 20 rows
+protein_df %>% 
+  arrange(-abs(Ratio.H.M)) %>% 
+  slice(1:20)
+
+# Super handy shortcut
+# just take the top n values in a variable
+protein_df_HM <- protein_df %>% 
+  top_n(20, Ratio.H.M)
+
+# ML:
+protein_df_ML <- protein_df %>% 
+  top_n(20, Ratio.M.L)
 
 # Exercise 10.5 (Find intersections) ====
+intersect(protein_df_HM, protein_df_ML)
+
+
+
 
