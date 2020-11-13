@@ -41,14 +41,41 @@ test_tb$`protein size (KD)`
 # protein_df$Intensity.H <- log10(protein_df$Intensity.H)
 
 # protein_df <- 
-protein_df %>% 
-  as_tibble() %>% 
-  mutate(Intensity.L = log10(Intensity.L),
-         Intensity.M = log10(Intensity.M),
-         Intensity.H = log10(Intensity.H))
+# protein_df %>% 
+#   as_tibble() %>% 
+#   mutate(Intensity.L = log10(Intensity.L),
+#          Intensity.M = log10(Intensity.M),
+#          Intensity.H = log10(Intensity.H))
 
 # As an exercise, can you figure out how to modify all
 # columns that begin with "Intensity"
+
+# in-situ log2 transformation at the columns of interest
+# protein_df %>% 
+#   as_tibble() %>% 
+#   mutate_at(vars(starts_with("Rat"), -ends_with("Sig")), log2)
+
+# A bit newer way, using across:
+protein_df <- protein_df %>% 
+  as_tibble() %>% 
+  mutate(across(starts_with("Rat") & -ends_with("Sig"), log2)) %>% 
+  mutate(across(starts_with("Int"), log10)) %>% 
+  mutate(Intensity.H.M = Intensity.H + Intensity.M,
+         Intensity.M.L = Intensity.M + Intensity.L)
+
+
+
+
+
+# problems here:
+# 1 - we've removed these columns form the whole data set
+# 2 - we've transformed the Sig columns as well as the ratios 
+# protein_df %>% 
+#   as_tibble() %>% 
+#   select(contains("Ratio")) %>% 
+#   log2
+
+
 
 
 # Add the intensities ====
